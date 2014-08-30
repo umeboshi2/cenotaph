@@ -2,27 +2,25 @@ import os
 
 from setuptools import setup, find_packages
 
-here = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(here, 'README.txt')) as f:
-    README = f.read()
-with open(os.path.join(here, 'CHANGES.txt')) as f:
-    CHANGES = f.read()
-
 requires = [
-    'pyramid',
-    'pyramid_chameleon',
-    'pyramid_debugtoolbar',
-    'pyramid_tm',
     'SQLAlchemy',
-    'transaction',
+    'psycopg2',        # dbapi for postgresql
+    'transaction',     # I am not sure if I should use this or not
+    'pyramid',
+    'pyramid_tm',
+    'pyramid_debugtoolbar',
     'zope.sqlalchemy',
+    'pyramid-beaker',
+    'pyramid-mako',
     'waitress',
+    'requests',
+    'cornice',
     ]
 
 setup(name='cenotaph',
       version='0.0',
       description='cenotaph',
-      long_description=README + '\n\n' + CHANGES,
+      long_description="cenotaph",
       classifiers=[
         "Programming Language :: Python",
         "Framework :: Pyramid",
@@ -44,4 +42,7 @@ setup(name='cenotaph',
       [console_scripts]
       initialize_cenotaph_db = cenotaph.scripts.initializedb:main
       """,
+      dependency_links=[
+        'https://github.com/knowah/PyPDF2/archive/master.tar.gz#egg=PyPDF2-1.15dev',
+        ]
       )
