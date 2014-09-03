@@ -18,3 +18,16 @@ Getting Started
 
 - $VENV/bin/pserve development.ini
 
+
+todo
+---------
+
+- session management
+
+- client admin section for user management
+
+- user manager
+
+- populate admin account
+
+- user menu in navbar
