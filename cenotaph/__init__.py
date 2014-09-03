@@ -7,9 +7,7 @@ from cenotaph.models.base import DBSession, Base
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
-    settings['db.sessionmaker'] = DBSession
     engine = engine_from_config(settings, 'sqlalchemy.')
-    DBSession = sessionmaker()
     settings['db.sessionmaker'] = DBSession
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
@@ -18,7 +16,7 @@ def main(global_config, **settings):
     config = Configurator(settings=settings,
                           request_factory=request_factory,)
     config.include('cornice')
-    config.add_static_view('static', 'static', cache_max_age=3600)
+    #config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('home', '/')
     config.add_view('cenotaph.views.client.ClientView',
                     route_name='home',)
@@ -35,6 +33,11 @@ def main(global_config, **settings):
         config.add_static_view(name='client',
                                path=settings['static_assets_path'])
 
-    
+        for asset in ['stylesheets', 'javascripts', 'images',
+                     'components', 'coffee']:
+            print "Adding asset", asset
+            config.add_static_view(name=asset,
+                                   path=settings['static.%s' % asset])
+
     #config.scan()
     return config.make_wsgi_app()
