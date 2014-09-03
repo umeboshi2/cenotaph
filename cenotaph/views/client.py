@@ -31,5 +31,3 @@ class ClientView(BaseUserViewCallable):
         self.response = Response(body=content)
         self.response.encode_content()
         
-    
-

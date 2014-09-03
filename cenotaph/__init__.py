@@ -1,5 +1,6 @@
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
+from sqlalchemy.orm import sessionmaker
 
 from cenotaph.models.base import DBSession, Base
 
@@ -8,6 +9,8 @@ def main(global_config, **settings):
     """
     settings['db.sessionmaker'] = DBSession
     engine = engine_from_config(settings, 'sqlalchemy.')
+    DBSession = sessionmaker()
+    settings['db.sessionmaker'] = DBSession
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
     Base.metadata.create_all(engine)
