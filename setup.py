@@ -44,5 +44,6 @@ setup(name='cenotaph',
       """,
       dependency_links=[
         'https://github.com/knowah/PyPDF2/archive/master.tar.gz#egg=PyPDF2-1.15dev',
+        'https://github.com/umeboshi2/trumpet/archive/master.tar.gz#egg=trumpet',
         ]
       )

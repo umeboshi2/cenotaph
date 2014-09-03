@@ -11,12 +11,7 @@ from pyramid.paster import (
 
 from pyramid.scripts.common import parse_vars
 
-from ..models import (
-    DBSession,
-    MyModel,
-    Base,
-    )
-
+from cenotaph.models.base import DBSession, Base, MyModel
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
