@@ -40,4 +40,5 @@ def main(global_config, **settings):
                                    path=settings['static.%s' % asset])
 
     #config.scan()
+    config.scan('cenotaph.views.currentuser')
     return config.make_wsgi_app()
