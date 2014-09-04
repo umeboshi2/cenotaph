@@ -36,3 +36,6 @@ def main(argv=sys.argv):
         DBSession.add(model)
     populate()
     
+if __name__ == '__main__':
+    main()
+    
