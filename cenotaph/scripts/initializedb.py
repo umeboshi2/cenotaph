@@ -12,6 +12,7 @@ from pyramid.paster import (
 from pyramid.scripts.common import parse_vars
 
 from cenotaph.models.base import DBSession, Base, MyModel
+from cenotaph.models.usergroup import populate
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
@@ -33,3 +34,5 @@ def main(argv=sys.argv):
     with transaction.manager:
         model = MyModel(name='one', value=1)
         DBSession.add(model)
+    populate()
+    
