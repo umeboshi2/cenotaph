@@ -6,6 +6,8 @@ from datetime import datetime
 from cornice.resource import resource, view
 from trumpet.views.base import BaseUserView
 
+from cenotaph.models.usergroup import User
+
 APIROOT = '/rest/v0'
 
 rscroot = os.path.join(APIROOT, 'main')
@@ -19,11 +21,10 @@ def convert_range_to_datetime(start, end):
     return start, end
     
 
-from cenotaph.models.usergroup import User
-
 @resource(path=current_user)
 class CurrentUserResource(BaseUserView):
     dbmodel = None
+    usermodel = User
     def get(self):
         user = self.get_current_user()
         if user is None:

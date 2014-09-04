@@ -25,13 +25,15 @@ def main(global_config, **settings):
     config.include('cornice')
     config.include('pyramid_beaker')
     #config.add_static_view('static', 'static', cache_max_age=3600)
+    client_view = 'cenotaph.views.client.ClientView'
     config.add_route('home', '/')
-    config.add_view('cenotaph.views.client.ClientView',
-                    route_name='home',)
     config.add_route('apps', '/app/{appname}')
-    config.add_view('cenotaph.views.client.ClientView',
-                    route_name='apps',)
-
+    config.add_view(client_view, route_name='home')
+    config.add_view(client_view, route_name='apps')
+    config.add_view(client_view, name='login')
+    config.add_view(client_view, name='logout')
+    config.add_view(client_view,
+                    context='pyramid.httpexceptions.HTTPForbidden')
     # static assets
     serve_static_assets = False
     if 'serve_static_assets' in settings and settings['serve_static_assets'].lower() == 'true':
