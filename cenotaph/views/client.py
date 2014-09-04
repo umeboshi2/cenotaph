@@ -3,6 +3,7 @@ from pyramid.response import Response
 
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPForbidden
 
 from pyramid.security import remember, forget
 
@@ -11,9 +12,10 @@ from trumpet.views.base import BaseUserViewCallable
 from cenotaph.models.usergroup import User
 from cenotaph.views.util import check_login_form
 
-def make_page(appname, settings):
+def make_page(appname, settings, basecolor=None):
     template = 'cenotaph:templates/mainview.mako'
-    basecolor = settings.get('default.css.basecolor', 'BlanchedAlmond')
+    if basecolor is None:
+        basecolor = settings.get('default.css.basecolor', 'BlanchedAlmond')
     csspath = settings.get('default.css.path', '/client/stylesheets')
     jspath = settings.get('default.js.path', '/client/javascripts')
     requirejs = settings.get('default.js.requirejs')
@@ -35,6 +37,8 @@ class ClientView(BaseUserViewCallable):
 
     def handle_get(self):
         request = self.request
+        if request.context is HTTPForbidden:
+            return HTTPFound('/')
         view = request.view_name
         subpath = request.subpath
         if not view:
@@ -50,13 +54,19 @@ class ClientView(BaseUserViewCallable):
         elif view in ['login', 'logout']:
             if view == 'logout':
                 return self.handle_logout()
-            
+        elif view == 'admin':
+            settings = self.get_app_settings()
+            appname = settings.get('default.js.admin_app', 'admin')
+            basecolor = settings.get('default.admin.basecolor', 'DarkSeaGreen')
+            self.get_main(appname=appname, basecolor=basecolor)
+        else:
+            raise HTTPNotFound, 'no way'
         
-    def get_main(self, appname=None):
+    def get_main(self, appname=None, basecolor=None):
         settings = self.get_app_settings()
         if appname is None:
             appname = settings.get('default.js.mainapp', 'frontdoor')
-        content = make_page(appname, settings)
+        content = make_page(appname, settings, basecolor=basecolor)
         self.response = Response(body=content)
         self.response.encode_content()
         
@@ -91,3 +101,6 @@ class ClientView(BaseUserViewCallable):
         
         
 
+def forbidden_view(exc, request):
+    location = request.route_url('home')
+    return HTTPFound(location=location)

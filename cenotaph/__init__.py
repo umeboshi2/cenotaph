@@ -2,8 +2,8 @@ from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 from sqlalchemy.orm import sessionmaker
 
-#from trumpet.security import make_authn_authz_policies
 
+from trumpet.security import authn_policy, authz_policy
 
 from cenotaph.models.base import DBSession, Base
 from cenotaph.models.usergroup import User
@@ -19,9 +19,13 @@ def main(global_config, **settings):
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
     Base.metadata.create_all(engine)
+    root_factory = 'trumpet.resources.RootGroupFactory'
     request_factory = 'trumpet.request.AlchemyRequest'
     config = Configurator(settings=settings,
-                          request_factory=request_factory,)
+                          root_factory=root_factory,
+                          request_factory=request_factory,
+                          authentication_policy=authn_policy,
+                          authorization_policy=authz_policy)
     config.include('cornice')
     config.include('pyramid_beaker')
     #config.add_static_view('static', 'static', cache_max_age=3600)
@@ -32,8 +36,10 @@ def main(global_config, **settings):
     config.add_view(client_view, route_name='apps')
     config.add_view(client_view, name='login')
     config.add_view(client_view, name='logout')
-    config.add_view(client_view,
+    # FIXME - get client view to understand it hit forbidden
+    config.add_view('cenotaph.views.client.forbidden_view',
                     context='pyramid.httpexceptions.HTTPForbidden')
+    config.add_view(client_view, name='admin', permission='admin')
     # static assets
     serve_static_assets = False
     if 'serve_static_assets' in settings and settings['serve_static_assets'].lower() == 'true':
