@@ -12,6 +12,12 @@ from trumpet.views.base import BaseUserViewCallable
 from cenotaph.models.usergroup import User
 from cenotaph.views.util import check_login_form
 
+class MyResource(object):
+    def __init__(self, name, parent=None):
+        self.__name__ = name
+        self.__parent__ = parent
+        
+
 def make_page(appname, settings, basecolor=None):
     template = 'cenotaph:templates/mainview.mako'
     if basecolor is None:
@@ -37,10 +43,9 @@ class ClientView(BaseUserViewCallable):
 
     def handle_get(self):
         request = self.request
-        if request.context is HTTPForbidden:
-            return HTTPFound('/')
         view = request.view_name
         subpath = request.subpath
+        settings = self.get_app_settings()
         if not view:
             route = request.matched_route.name
             if route == 'home':
@@ -54,8 +59,11 @@ class ClientView(BaseUserViewCallable):
         elif view in ['login', 'logout']:
             if view == 'logout':
                 return self.handle_logout()
+            elif view == 'login':
+                appname = settings.get('default.js.login_app', 'login')
+                self.get_main(appname=appname)
+                return
         elif view == 'admin':
-            settings = self.get_app_settings()
             appname = settings.get('default.js.admin_app', 'admin')
             basecolor = settings.get('default.admin.basecolor', 'DarkSeaGreen')
             self.get_main(appname=appname, basecolor=basecolor)
@@ -102,5 +110,7 @@ class ClientView(BaseUserViewCallable):
         
 
 def forbidden_view(exc, request):
-    location = request.route_url('home')
+    root = MyResource('')
+    login = MyResource('login', root)
+    location = request.resource_url(login)
     return HTTPFound(location=location)
