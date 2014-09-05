@@ -31,3 +31,5 @@ todo
 - populate admin account
 
 - user menu in navbar
+
+- local fonts and remote fonts in config

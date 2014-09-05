@@ -1,3 +1,5 @@
+import os
+
 from sqlalchemy.orm.exc import NoResultFound
 
 from pyramid.security import remember, forget
@@ -37,4 +39,12 @@ def check_login_form(request):
         request.session['user'] = uc
     return authenticated
 
+
+#@resource(**make_resource(path, ident='name'))
+def make_resource(rpath, ident='id', cross_site=True):
+    path = os.path.join(rpath, '{%s}' % ident)
+    data = dict(collection_path=rpath, path=path)
+    if cross_site:
+        data['cors_origins'] = ('*',)
+    return data
 

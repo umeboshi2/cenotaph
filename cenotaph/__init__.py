@@ -57,4 +57,5 @@ def main(global_config, **settings):
 
     #config.scan()
     config.scan('cenotaph.views.currentuser')
+    config.scan('cenotaph.views.useradmin')
     return config.make_wsgi_app()
