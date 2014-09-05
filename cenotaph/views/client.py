@@ -11,6 +11,7 @@ from trumpet.views.base import BaseUserViewCallable
 
 from cenotaph.models.usergroup import User
 from cenotaph.views.util import check_login_form
+from cenotaph.views.rest import APIROOT
 
 class MyResource(object):
     def __init__(self, name, parent=None):
@@ -110,6 +111,8 @@ class ClientView(BaseUserViewCallable):
         
 
 def forbidden_view(exc, request):
+    if request.path.startswith(APIROOT):
+        return Response(json=dict(status=403, result='failed'))
     root = MyResource('')
     login = MyResource('login', root)
     location = request.resource_url(login)

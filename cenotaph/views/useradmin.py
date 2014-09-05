@@ -9,11 +9,10 @@ from cenotaph.models.usergroup import User, Group, Password
 from cenotaph.models.usergroup import UserGroup
 
 from cenotaph.views.util import make_resource as make_base_resource
+from cenotaph.views.rest import MAIN_RESOURCE_ROOT
 from cenotaph.managers.useradmin import UserManager
 
-APIROOT = '/rest/v0'
-
-rscroot = os.path.join(APIROOT, 'main')
+rscroot = MAIN_RESOURCE_ROOT
 
 
 users_path = os.path.join(rscroot, 'users')
