@@ -6,7 +6,9 @@ from sqlalchemy.orm import sessionmaker
 from trumpet.security import authn_policy, authz_policy
 
 from cenotaph.models.base import DBSession, Base
+
 from cenotaph.models.usergroup import User
+import cenotaph.models.sitecontent
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -51,11 +53,12 @@ def main(global_config, **settings):
 
         for asset in ['stylesheets', 'javascripts', 'images',
                      'components', 'coffee']:
-            print "Adding asset", asset
+            #print "Adding asset", asset
             config.add_static_view(name=asset,
                                    path=settings['static.%s' % asset])
 
     #config.scan()
     config.scan('cenotaph.views.currentuser')
     config.scan('cenotaph.views.useradmin')
+    config.scan('cenotaph.views.sitetext')
     return config.make_wsgi_app()
