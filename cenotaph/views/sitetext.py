@@ -25,7 +25,7 @@ def convert_range_to_datetime(start, end):
 
 @resource(permission='admin', **make_resource(sitetext_path))
 class SiteTextResource(BaseManagementResource):
-    mgrclass = None
+    mgrclass = WikiManager
     def collection_post(self):
         request = self.request
         db = request.db
