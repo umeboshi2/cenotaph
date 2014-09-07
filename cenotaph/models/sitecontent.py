@@ -88,3 +88,26 @@ def populate_sitetext():
         session.rollback()
         
 
+
+
+def populate_sitetext(directory):
+    session = DBSession()
+    import os
+    if not os.path.isdir(directory):
+        print "No Images to populate"
+        return
+    extension = '.md'
+    for basename in os.listdir(directory):
+        pages = list()
+        if basename.endswith(extension):
+            filename = os.path.join(directory, basename)
+            content = file(filename).read()
+            name = os.path.basename(filename[:-len(extension)])
+            pages.append((name, content))
+    try:
+        with transaction.manager:
+            for name, content in pages:
+                page = SiteText(name, content, type='tutwiki')
+                session.add(page)
+    except IntegrityError:
+        session.rollback()
