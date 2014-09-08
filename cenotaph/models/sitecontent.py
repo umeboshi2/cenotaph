@@ -77,18 +77,6 @@ def populate_images(imagedir='images'):
         imgfile = file(filename)
         im.add_image(basename, imgfile)
             
-def populate_sitetext():
-    session = DBSession()
-    try:
-        with transaction.manager:
-            page = SiteText('FrontPage',
-                            'This is the front page.', type='tutwiki')
-            session.add(page)
-    except IntegrityError:
-        session.rollback()
-        
-
-
 
 def populate_sitetext(directory):
     session = DBSession()
@@ -97,17 +85,19 @@ def populate_sitetext(directory):
         print "No Images to populate"
         return
     extension = '.md'
+    pages = list()
     for basename in os.listdir(directory):
-        pages = list()
         if basename.endswith(extension):
             filename = os.path.join(directory, basename)
-            content = file(filename).read()
-            name = os.path.basename(filename[:-len(extension)])
-            pages.append((name, content))
+            if os.path.isfile(filename):
+                content = file(filename).read()
+                name = os.path.basename(filename[:-len(extension)])
+                pages.append((name, content))
     try:
         with transaction.manager:
             for name, content in pages:
-                page = SiteText(name, content, type='tutwiki')
+                page = SiteText(name, content)
+                page.type = 'tutwiki'
                 session.add(page)
     except IntegrityError:
         session.rollback()
