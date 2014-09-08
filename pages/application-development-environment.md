@@ -40,20 +40,33 @@ develop each part separately.
 
 ### Application Skeleton
 
-- main.coffee (main-local)
+- **main (main-local)**
   This is where the requirejs config is located.  This file is 
   responsible for importing the application module and starting
   the application.
-- application.coffee
-  This module is responsible for the initial setup of the application.
-  It starts the AppRouters of all the sub applications.
-- models.coffee and collections.coffee
+- **application**
+  - This module is responsible for the initial setup of the application.
+  - This module sets the AppRegions for the main page.
+  - It starts the AppRouters of all the sub applications.
+  - If logins are used, this module sets the handler for the user info
+	and starts the app after fetching the user info.
+- **models** and **collections**
   These provide access to models and collections that are 
   global to the application, such as "current user info" for
   the logged in user.
-- msgbus.coffee
+- **msgbus**
   This is the global message bus that allows communication 
   between the main application and the sub apps.
 
+### Child Application Skeleton
+
+- main.coffee
+- models and collections
+
+### Frontdoor Application
+
+The frontdoor application is the default child application.  One
+child application must exist to perform the function of an "index.html"
+page.
 
 

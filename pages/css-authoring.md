@@ -25,16 +25,20 @@ color themes, and there is a python script that generates the
 scss files.  The example is imcomplete, but provides enough to 
 direct the css developer on how to proceed.  A plugin for creating 
 buttons, [Sassy Buttons](http://jaredhardy.com/sassy-buttons/), is also 
-being used.  
+being used.
 
 ### Icons
 Finally, [FontAwesome](http://fontawesome.io/), is 
 being used to provide icons.  The scss files are 
 copied from the
 [git repository](https://github.com/FortAwesome/Font-Awesome/tree/master/scss),
-and may need to be updated.  In the future, I'd like to use 
-[bower](http://bower.io) to track the upstream source and use a 
-script to install the scss files into the sass/partials directory.
+and may need to be updated.  In the future, I'd like to use
+[font-awesome-sass](https://github.com/FortAwesome/font-awesome-sass) to
+do this.  In the past, I had trouble integrating this into compass,
+but it's possible that this problem has disappeared.  If it hasn't
+disappeared, [bower](http://bower.io) can still be used to track the
+upstream source and use a script to install the scss files into the
+sass/partials directory.
 
 ### FullCalendar
 
