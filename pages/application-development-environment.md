@@ -1,7 +1,13 @@
 # Application Development Environment
 
-## NodeJS
+## node.js
 
+A [node.js](http://nodejs.org) environment is used to develop and
+build the applications.  [Grunt](http://gruntjs.com/) is used to
+build and optimize the static resources for the client application.
+The Gruntfile is written in coffeescript.  [bower](http://bower.io)
+is also used in the node environment to install the upstream
+static resources needed by the application.
 
 ## CoffeeScript
 
@@ -32,7 +38,6 @@ and also forcing every variable to be declared locally on first chance
 in that anonymous function, making it very difficult to pollute 
 the global namespace accidentally.
 
-
 ## Backbone.Marionette
 
 Marionette is the main application framework.  Marionette makes 
@@ -42,6 +47,13 @@ decouple the components of the application, making it easier to
 develop each part separately.
 
 ### Application Skeleton
+
+The application skeleton was inspired by this github
+[project](https://github.com/t2k/backbone.marionette-RequireJS),
+which provides some simple boilerplate code to start
+a single page application using marionette, coffeescript, and
+requirejs.  It also taught me to use bower to manage the
+components and their dependencies.
 
 - **main (main-local)**
   This is where the requirejs config is located.  This file is 
@@ -72,6 +84,11 @@ develop each part separately.
 
 ### Child Application Skeleton
 
+The child application exists in a subdirectory of the main
+application root (since, I'm making these modules somewhat 
+interchangeable and transferrable, this may change) and 
+provides a certain set of functionality for the application.
+
 - **main**
   - The main module is responsible creating the router that maps
 	the routes to methods on the controller.
@@ -101,7 +118,4 @@ The frontdoor application can be required last in the application module
 and interact with the functionality of those child applications, such as
 accessing models, collections, templates, and views of those child
 applications with the controller of the frontdoor application.
-
-
-
 
