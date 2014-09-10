@@ -23,7 +23,7 @@ def convert_range_to_datetime(start, end):
     end = datetime.fromtimestamp(float(end))
     return start, end
 
-@resource(permission='admin', **make_resource(sitetext_path))
+@resource(permission='admin', **make_resource(sitetext_path, ident='name'))
 class SiteTextResource(BaseManagementResource):
     mgrclass = WikiManager
     def collection_post(self):
@@ -39,11 +39,11 @@ class SiteTextResource(BaseManagementResource):
     def put(self):
         request = self.request
         db = request.db
-        id = int(request.matchdict['id'])
-        page = self.mgr.get(id)
+        name = self.request.matchdict['name']
+        page = self.mgr.getbyname(name)
         if page is not None:
             content = request.json.get('content')
-            page = self.mgr.update_page(id, content)
+            page = self.mgr.update_page(page.id, content)
             page = page.serialize()
             response = dict(result='success')
         else:
@@ -62,4 +62,8 @@ class SiteTextResource(BaseManagementResource):
                 db.delete(st)
         return dict(result='success')
     
+    def get(self):
+        name = self.request.matchdict['name']
+        return self.serialize_object(self.mgr.getbyname(name))
+
     
