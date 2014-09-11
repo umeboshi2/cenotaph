@@ -19,7 +19,13 @@ plugin for compass, making it easier to customize pages that use the
 [bootstrap](http://getbootstrap.com/) framework.  Also, a helper for 
 generating [jquery-ui](FIXME) themes,
 [Compass UI](https://github.com/patrickward/compass-ui), is used in 
-this probject.  This project provides an example of how both the 
+this probject.  At full size the bootstrap css file is 291K(120K,
+compass compressed output), while the jqueryui css file is 77K(31k,
+compass compressed output).  These sizes can be decreased by delving into
+the scss provided by the plugins and only using what is needed for the
+particular application.
+
+This project provides an example of how both the 
 bootstrap and jquery-ui plugins can be configured to use the same 
 color themes, and there is a python script that generates the
 scss files.  The example is imcomplete, but provides enough to 
