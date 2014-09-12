@@ -1,5 +1,25 @@
 # Application Development Environment
 
+## Development Environments
+
+Vagrant is the development environment of choice, since it
+requires the least amount of changes to the operating system.
+All that is needed is virtualbox and the vagrant application.  In
+the future, docker will be used to contain the development
+environment.  Using vagrant allows for better server side development,
+where the developer can configure services that won't interfere
+with the developer's system.  The environment is configured
+using [salt](http://www.saltstack.com).
+
+An alternative to using vagrant, which is the alternative used
+on my netbook of limited resources, is to use schroot to
+contain the development enviroment in a chroot.  This can also
+be configured with salt, and a script exists in the scripts/
+directory to achieve this.
+
+Of course, development can be done natively in the operating system,
+if desired.
+
 ## node.js
 
 A [node.js](http://nodejs.org) environment is used to develop and
@@ -46,6 +66,97 @@ manageable module.  It uses a communication mechanism to
 decouple the components of the application, making it easier to 
 develop each part separately.
 
+### Application Model
+
+An application model looks like this:
+
+- AppModel
+  - brand:
+	- name: 'App Name'
+	- url: '#'
+  - apps: 
+	- { appname:'', name:'', url:''}
+  - appregions
+  - approutes
+
+
+### Common Modules
+
+Common modules exist in the common/ directory.
+
+#### appregions
+
+This module contains the default appregion objects which can
+be passed to the addRegions method of the
+[application](http://marionettejs.com/docs/marionette.application.html)
+object.  There is a basic object for a static application, as well
+as one for applications that have authenticated users.
+
+This module also has a function to prepare the application.  It adds
+the [regions](http://marionettejs.com/docs/marionette.region.html)
+described in the appregions property of the appmodel object.  It adds
+default show and empty view handlers on the main message bus for each
+region described in the appregions object, in the
+form appregion:{region}:{action}.  It also adds the routes described
+in the approutes property of the appmodel.
+
+#### approuters
+
+This is just a simple
+[AppRouter](http://marionettejs.com/docs/marionette.approuter.html)
+that updates the navbar when the child app changes.
+
+### controllers
+
+There is a simple SideBarController that doesn't do very much but help
+maintain a "side bar", which is a common feature of many controllers.
+This module exists to provide common functionality to controllers
+when the need arises.
+
+### mainpage
+
+This module needs to be fixed, as it is too constrictive concerning
+the views and layout that are used on all the pages.  However, this
+module does provide a common *initialize_page* function that nests
+the rendering of the navbar view upon completion of the rendering
+of the main layout.  The main layout contains most of the elements
+of the default appregions.  The main layout is currently a bootstrap
+two column layout with a fixed navbar.  This function needs to be
+updated to handle different layouts and nested views.  This function
+is contained in a message bus wrapper with the signal *mainpage:init*.
+
+
+There is also a function that sets a handler for when the
+navbar is displayed to add a user menu view to the navbar.
+This helps minimize the amount of code that distinguishes an
+application that requires authenticated users, and static apps
+that have no such requirements.
+
+Every function exported in this module requires the MainBus
+to be passed as a parameter to set handlers for the functionality.
+
+### mainviews
+
+There are four basic views defined here.  The main page layout,
+as well as the navbar view are defined here.  There is also
+a login view and a user menu view.  These views do nothing
+but use specific templates in *common/templates*.
+
+### templates
+
+There are common templates here for the four views described
+above. There is also a common template to create a side bar
+with buttons, as well as a function to create a label and
+input for a bootstrap form.
+
+### models
+
+There is a model here to contain the current authenticated
+user of the application.  There must be a url on the
+server that returns a "current user" object to fill the
+model.
+
+
 ### Application Skeleton
 
 The application skeleton was inspired by this github
@@ -84,10 +195,13 @@ components and their dependencies.
 
 ### Child Application Skeleton
 
-The child application exists in a subdirectory of the main
-application root (since, I'm making these modules somewhat 
-interchangeable and transferrable, this may change) and 
-provides a certain set of functionality for the application.
+The child application exists *logically* in a subdirectory of
+the main application root.  The structure of the child application,
+along with the use of a separate message bus for each child application,
+provides the ability to use the same child application in multiple
+main apps, if needed.  If the child application is not in the subdirectory
+of the main application, the path needs to be configured in requirejs
+config object.
 
 - **main**
   - The main module is responsible creating the router that maps
