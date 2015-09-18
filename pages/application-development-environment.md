@@ -77,7 +77,11 @@ An application model looks like this:
   - apps: 
 	- { appname:'', name:'', url:''}
   - appregions
-  - approutes
+  - approutes (these are the signals to start the approuters and controllers)
+	- this needs to be renamed, the actual approutes are defined in the
+	  approuters.  These are just signals for commands that create the
+	  approuters and attach them to controllers.
+	  
 
 
 ### Common Modules
