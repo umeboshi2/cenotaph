@@ -14,7 +14,7 @@ from sqlalchemy import Enum
 from sqlalchemy.orm import relationship, backref
 
 from trumpet.models.util import SerialBase
-from cenotaph.models.base import DBSession, Base
+from trumpet.models.base import DBSession, Base
 
 from sqlalchemy.exc import IntegrityError
 

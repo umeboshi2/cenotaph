@@ -4,10 +4,12 @@ from sqlalchemy.orm import sessionmaker
 
 
 from trumpet.security import authn_policy, authz_policy
+from trumpet.config import add_static_views
 
-from cenotaph.models.base import DBSession, Base
+#from cenotaph.models.base import DBSession, Base
+from trumpet.models.base import DBSession, Base
+from trumpet.models.usergroup import User
 
-from cenotaph.models.usergroup import User
 import cenotaph.models.sitecontent
 
 def main(global_config, **settings):
@@ -46,18 +48,10 @@ def main(global_config, **settings):
     serve_static_assets = False
     if 'serve_static_assets' in settings and settings['serve_static_assets'].lower() == 'true':
         serve_static_assets = True
+
     if serve_static_assets:
-        print "Serving static assets from pyramid.", serve_static_assets
-        config.add_static_view(name='client',
-                               path=settings['static_assets_path'])
-
-        for asset in ['stylesheets', 'javascripts', 'images',
-                     'components', 'coffee']:
-            #print "Adding asset", asset
-            config.add_static_view(name=asset,
-                                   path=settings['static.%s' % asset])
-
-    #config.scan()
+        add_static_views(config, settings)
+        
     config.scan('cenotaph.views.currentuser')
     config.scan('cenotaph.views.useradmin')
     config.scan('cenotaph.views.sitetext')

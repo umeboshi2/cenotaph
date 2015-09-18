@@ -11,8 +11,8 @@ from pyramid.paster import (
 
 from pyramid.scripts.common import parse_vars
 
-from cenotaph.models.base import DBSession, Base, MyModel
-from cenotaph.models.usergroup import populate as populate_users
+from trumpet.models.base import DBSession, Base
+from trumpet.models.usergroup import populate as populate_users
 from cenotaph.models.sitecontent import populate_sitetext
 
 def usage(argv):
